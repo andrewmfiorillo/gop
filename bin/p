@@ -196,7 +196,7 @@ check_current_version() {
     if test $? -eq 0; then
         get_current_version
         if diff &> /dev/null \
-            "$BASE_VERSIONS_DIR"/python/"$current"/python.exe \
+            "$BASE_VERSIONS_DIR"/python/"$current"/python \
             "$(which python)" ; then
             active="python/$current"
         fi
@@ -309,7 +309,7 @@ activate() {
     if test "$version" != "$active"; then
         echo "$active" > "$BASE_VERSIONS_DIR"/.prev
 
-        ln -sf "$BASE_VERSIONS_DIR"/"$version"/python.exe "$BASE_VERSIONS_DIR"/python/python
+        ln -sf "$BASE_VERSIONS_DIR"/"$version"/python "$BASE_VERSIONS_DIR"/python/python
     fi
 }
 
@@ -409,7 +409,7 @@ install() {
     log compile "$version"
     make &> /dev/null
 
-    if [ ! -f "python.exe" ]; then
+    if [ ! -f "python" ]; then
     	abort "Unable to compile Python $version!"
     fi
 
@@ -460,7 +460,7 @@ display_bin_path_for_version() {
         fi
     fi
 
-    local bin=$BASE_VERSIONS_DIR/python/$version/python.exe
+    local bin=$BASE_VERSIONS_DIR/python/$version/python
     if test -f "$bin"; then
         printf "%s \n" "$bin"
     else
@@ -482,7 +482,7 @@ execute_with_version() {
         version=$(display_latest_stable_version)
     fi
 
-    local bin=$BASE_VERSIONS_DIR/python/$version/python.exe
+    local bin=$BASE_VERSIONS_DIR/python/$version/python
 
     shift # remove version
 
