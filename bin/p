@@ -11,18 +11,6 @@ P_PREFIX=${P_PREFIX-/usr/local}
 BASE_VERSIONS_DIR=$P_PREFIX/p/versions
 
 #
-# Add to PATH.
-#
-
-if ! grep -q "export PATH=$BASE_VERSIONS_DIR/python:\$PATH" ~/.bashrc; then
-    echo -e "\nexport PATH=$BASE_VERSIONS_DIR/python:\$PATH" >> ~/.bashrc
-fi
-
-if ! grep -q "export PATH=\"$BASE_VERSIONS_DIR/python:\$PATH\"" ~/.zshrc; then
-    echo -e "\nexport PATH=\"$BASE_VERSIONS_DIR/python:\$PATH\"" >> ~/.zshrc
-fi
-
-#
 # Python source.
 #
 
@@ -427,11 +415,6 @@ install() {
 
     activate python/"$version"
     log activate "$version"
-
-    source ~/.bashrc
-    source ~/.zshrc
-    export PATH=$BASE_VERSIONS_DIR/python:$PATH
-    log refresh \$PATH
 
     get_current_version
     success "Now using Python $current!"
