@@ -98,7 +98,6 @@ display_help() {
     p use <version> [args ...]     Execute Python <version> with [args ...]
     p bin <version>                Output bin path for <version>
     p rm <version ...>             Remove the given version(s)
-    p prev                         Revert to the previously activated version
     p ls                           Output the versions of Python available
       p ls latest                  Output the latest Python version available
       p ls stable                  Output the latest stable Python version available
@@ -121,7 +120,6 @@ display_status() {
 
     log version "$current"
     log bin "$(display_bin_path_for_version)"
-    log previous "$(get_previous_version)"
     log latest "$(is_latest_version)"
     log stable "$(is_latest_stable_version)"
 }
@@ -156,17 +154,6 @@ next_version_installed() {
 
 prev_version_installed() {
     list_versions_installed | grep "$selected" -B 1 | head -n 1
-}
-
-#
-# Output previous version.
-#
-get_previous_version() {
-    if [ ! -f "$BASE_VERSIONS_DIR"/.prev ]; then
-        echo "none"
-    else
-        cat "$BASE_VERSIONS_DIR"/.prev
-    fi
 }
 
 #
@@ -307,28 +294,8 @@ activate() {
     local version=$1
     check_current_version
     if test "$version" != "$active"; then
-        echo "$active" > "$BASE_VERSIONS_DIR"/.prev
-
         ln -sf "$BASE_VERSIONS_DIR"/"$version"/python "$BASE_VERSIONS_DIR"/python/python
     fi
-}
-
-#
-# Activate previous Python.
-#
-
-activate_previous() {
-    test -f "$BASE_VERSIONS_DIR"/.prev || abort "no previous versions activated"
-    local prev
-    prev=$(cat "$BASE_VERSIONS_DIR"/.prev)
-    test -d "$BASE_VERSIONS_DIR"/"$prev" || abort "previous version $prev not installed"
-    activate "$prev"
-    echo
-    get_current_version
-    log activate "$current"
-    echo
-
-    success "Now using Python $current!"
 }
 
 #
@@ -605,7 +572,6 @@ else
                 *) display_remote_versions; exit ;;
             esac
             exit ;;
-            prev|previous) activate_previous; exit ;;
             default) activate_default; exit ;;
             latest) install "$($0 ls latest)"; exit ;;
             stable) install "$($0 ls stable)"; exit ;;
