@@ -410,14 +410,14 @@ install() {
     make &> /dev/null
 
     if [ ! -f "python" ]; then
-    	abort "Unable to compile Python $version!"
+        abort "Unable to compile Python $version!"
     fi
 
     activate python/"$version"
     log activate "$version"
 
     get_current_version
-    success "Now using Python $current!"
+    success "Done."
 }
 
 #
