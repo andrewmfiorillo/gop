@@ -381,10 +381,6 @@ install() {
         abort "Unable to compile Python $version!"
     fi
 
-    activate python/"$version"
-    log activate "$version"
-
-    get_current_version
     success "Done."
 }
 
