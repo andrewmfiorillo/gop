@@ -53,16 +53,16 @@ Usage: p [COMMAND] [args]
 Commands:
 
 p                              Output versions installed
-p status                       Output current status
-p <version>                    Activate to Python <version>
-  p latest                     Activate to the latest Python release
-  p stable                     Activate to the latest stable Python release
-p use <version> [args ...]     Execute Python <version> with [args ...]
-p bin <version>                Output bin path for <version>
-p rm <version ...>             Remove the given version(s)
 p ls                           Output the versions of Python available
   p ls latest                  Output the latest Python version available
   p ls stable                  Output the latest stable Python version available
+p <version>                    Activate to Python <version>
+  p latest                     Activate to the latest Python release
+  p stable                     Activate to the latest stable Python release
+p status                       Output current status
+p use <version> [args ...]     Execute Python <version> with [args ...]
+p bin <version>                Output bin path for <version>
+p rm <version ...>             Remove the given version(s)
 p default                      Use default (system) Python installation
 
 Options:
@@ -83,21 +83,38 @@ $ p
     3.7.0
 ```
 
-### `p status`
+### `p ls [latest|stable]`
 
-Show the version, bin path, and status of current activated Python version.
+List available Python versions. If `latest` or `stable` is supplied, show only the corresponding version.
 
 ```
-$ p status
-     version : 3.6.5
-         bin : /home/raphx/.python/p/versions/python/3.6.5/python
-      latest : no
-      stable : yes
+$ p ls
+
+# --snip--
+
+    2.7.12
+    2.7.13
+    2.7.14
+    3.0.1
+    3.1.1
+    3.1.2
+    3.1.3
+    3.1.4
+    3.1.5
+    3.2.1
+    3.2.2
+    3.2.3
+    3.2.4
+    3.2.5
+    3.2.6
+    3.3.0
+
+# --snip--
 ```
 
 ### `p [<version>|latest|stable]`
 
-Activate, or install the specified Python version if not already installed. `latest` and `stable` can be used to quickly install the latest or stable version respectively.
+Activate, or install the specified Python version if not already installed. `latest` and `stable` can be used to quickly install the latest or latest stable version respectively.
 
 ```
 $ p 3.3.4
@@ -109,6 +126,18 @@ $ p 3.3.4
      compile : 3.3.4
 
   Success: Installed Python 3.3.4!
+```
+
+### `p status`
+
+Show the version, bin path, and status of current activated Python version.
+
+```
+$ p status
+     version : 3.6.5
+         bin : /home/raphx/.python/p/versions/python/3.6.5/python
+      latest : no
+      stable : yes
 ```
 
 ### `p use`
@@ -139,35 +168,6 @@ $ p rm 2.7.14
       remove : 2.7.14
 
   Success: Removed Python 2.7.14!
-```
-
-### `p ls [latest|stable]`
-
-List available Python versions. If `latest` or `stable` is supplied, show only the corresponding version.
-
-```
-$ p ls
-
-# --snip--
-
-    2.7.12
-    2.7.13
-    2.7.14
-    3.0.1
-    3.1.1
-    3.1.2
-    3.1.3
-    3.1.4
-    3.1.5
-    3.2.1
-    3.2.2
-    3.2.3
-    3.2.4
-    3.2.5
-    3.2.6
-    3.3.0
-
-# --snip--
 ```
 
 ### `p default`

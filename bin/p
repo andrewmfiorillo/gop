@@ -91,16 +91,16 @@ display_help() {
   Commands:
 
     p                              Output versions installed
-    p status                       Output current status
-    p <version>                    Activate to Python <version>
-      p latest                     Activate to the latest Python release
-      p stable                     Activate to the latest stable Python release
-    p use <version> [args ...]     Execute Python <version> with [args ...]
-    p bin <version>                Output bin path for <version>
-    p rm <version ...>             Remove the given version(s)
     p ls                           Output the versions of Python available
       p ls latest                  Output the latest Python version available
       p ls stable                  Output the latest stable Python version available
+    p <version>                    Activate to Python <version>
+      p latest                     Activate to the latest Python release
+      p stable                     Activate to the latest stable Python release
+    p status                       Output current status
+    p use <version> [args ...]     Execute Python <version> with [args ...]
+    p bin <version>                Output bin path for <version>
+    p rm <version ...>             Remove the given version(s)
     p default                      Use default (system) Python installation
 
   Options:
