@@ -381,7 +381,7 @@ install() {
         abort "Unable to compile Python $version!"
     fi
 
-    success "Done."
+    success "Installed Python $version!"
 }
 
 #
