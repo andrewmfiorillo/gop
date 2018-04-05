@@ -1,6 +1,4 @@
-# `p`
-
-## Python Version Management, Simplified.
+# `p` - Python Version Management, Simplified.
 
 ![introduction](https://cloud.githubusercontent.com/assets/1139621/7488032/37f37308-f389-11e4-8995-89f7cba5ad8b.gif)
 
@@ -12,7 +10,7 @@
 
 `p` is also great for getting started using Python development versions. Use `p latest` to get up and running with the latest development version of Python!
 
-## Installation
+## :inbox_tray: Installation
 
 After downloading the Bash script, simply copy it over to your `$PATH` and `p` will take care of the rest.
 
@@ -24,7 +22,7 @@ mv p /usr/local/bin
 
 So far, `p` has only been tested in Bash.
 
-## Usage
+## :green_book: Usage
 
 ```
 Usage: p [COMMAND] [args]
