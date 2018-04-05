@@ -337,7 +337,7 @@ install() {
     url=$(tarball_url "$version")
 
     if test -d "$dir"; then
-        if [[ ! -e "$dir"/n.lock ]] ; then
+        if [[ ! -e "$dir"/p.lock ]] ; then
             activate python/"$version"
 
             log activate "$version"
