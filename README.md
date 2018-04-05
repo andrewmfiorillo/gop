@@ -2,13 +2,29 @@
 
 ![introduction](https://cloud.githubusercontent.com/assets/1139621/7488032/37f37308-f389-11e4-8995-89f7cba5ad8b.gif)
 
-`p` is powerful and feature-packed, yet simple, both in setup and use. There are no tricky settings, options, or crazy dependencies. `p` is just a helpful ~600 line Bash script that gets the job done.
+`p` is powerful and feature-packed, yet simple, both in setup and use.
 
-**`p` let's you quickly switch between Python versions whenever you need to, removing the barrier between Python 2.x.x and 3.x.x.**
-
-`p` was heavily inspired by [`n`, a version manager for Node.js](https://github.com/tj/n).
+There are no tricky settings, options, or crazy dependencies. `p` is just a helpful ~600 line Bash script that gets the job done, and was heavily inspired by [`n`, a version manager for Node.js](https://github.com/tj/n).
 
 `p` is also great for getting started using Python development versions. Use `p latest` to get up and running with the latest development version of Python!
+
+## How does `p` work?
+
+`p` stores each Python version installed under the directory `$P_PREFIX/p/versions/python`. When a Python version is activated, `p` creates a symbolic link `$P_PREFIX/p/versions/python/python` pointing to the relevant Python binary.
+
+For example, Python version 3.6.5 is installed, and it will be placed under the directory:
+
+```
+$P_PREFIX/p/versions/python/3.6.5
+```
+
+Activating version 3.6.5 will create a symlink that points to the binary:
+
+```
+$P_PREFIX/p/versions/python/python -> $P_PREFIX/p/versions/python/3.6.5/python
+```
+
+`$P_PREFIX` allows you to customize where python versions are installed, and defaults to `/usr/local` if unspecified. To use the Python symlink created, it is necessary to prepend `$P_PREFIX/p/versions/python` to your `$PATH`.
 
 ## :inbox_tray: Installation
 
@@ -20,7 +36,14 @@ chmod +x p
 mv p /usr/local/bin
 ```
 
-So far, `p` has only been tested in Bash.
+You might want to install Python versions to your home directory, and add the directory containing the Python symlink to your `$PATH`:
+
+```
+# In ~/.bash_profile, or the equivalent
+
+export P_PREFIX=~/.python
+export PATH="$P_PREFIX/p/versions/python:$PATH"
+```
 
 ## :green_book: Usage
 
@@ -159,14 +182,6 @@ $ p default
 ```
 
 ## FAQs
-
-**How does `p` work?**
-
-`p` stores each Python version installed in `$P_PREFIX/p/versions/python`. When a Python version is activated, `p` creates a symbolic link to the Python binary located at `$P_PREFIX/p/versions/python/python`. `$P_PREFIX` allows you to customize where python versions are installed, and defaults to `/usr/local` if unspecified.
-
-**How do I revert back to my default Python version?**
-
-Simply run `p default` and `p` will remove the symbolic link described above; therefore reverting back to your default Python version.
 
 **Does `p` download the source each time I activate or install a version?**
 
