@@ -42,6 +42,7 @@ p rm <version ...>             Remove the given version(s)
 p ls                           Output the versions of Python available
   p ls latest                  Output the latest Python version available
   p ls stable                  Output the latest stable Python version available
+p default                      Use default (system) Python installation
 
 Options:
 
@@ -63,7 +64,7 @@ $ p
 
 ### `p status`
 
-Shows the version, bin path, and status of current activated Python version.
+Show the version, bin path, and status of current activated Python version.
 
 ```
 $ p status
@@ -146,6 +147,17 @@ $ p ls
     3.3.0
 
 # --snip--
+```
+
+### `p default`
+
+Remove the Python symlink created by `p`, thereby reverting to use the default or system installed Python, if there are any. For instance, I have a system Python with version 3.6.5:
+
+```
+$ p default
+    activate : default
+
+  Success: Now using Python 3.6.5!
 ```
 
 ## FAQs

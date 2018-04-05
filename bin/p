@@ -101,6 +101,7 @@ display_help() {
     p ls                           Output the versions of Python available
       p ls latest                  Output the latest Python version available
       p ls stable                  Output the latest stable Python version available
+    p default                      Use default (system) Python installation
 
   Options:
 
@@ -168,7 +169,6 @@ display_p_version() {
 # Gets current human-readable Python version.
 #
 get_current_version() {
-    # current=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))')
     local version
     version=$(python -V 2>&1)
     current=${version#*Python }
@@ -308,7 +308,7 @@ activate_default() {
     rm -rf "$BASE_VERSIONS_DIR"/python/python
 
     get_current_version
-    success "Now using Python $current!\n  Use \`p <version>\` to activate another version."
+    success "Now using Python $current!"
 }
 
 #
