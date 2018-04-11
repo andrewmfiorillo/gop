@@ -183,10 +183,6 @@ $ p default
 
 ## FAQs
 
-**Does `p` download the source each time I activate or install a version?**
-
-Nope. `p` stores the source for each of the versions installed, allowing for quick activations between already-installed versions.
-
 **How do I get this working on Windows?**
 
 No Windows support planned at the moment, PRs are always welcomed!

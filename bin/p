@@ -354,15 +354,14 @@ install() {
 
     is_ok "$url" || abort "invalid version $version"
 
-    log create "$dir"
-    mkdir -p "$dir"
+    mkdir -p "$dir/src"
     if [ $? -ne 0 ] ; then
         abort "sudo required"
     else
         touch "$dir"/p.lock
     fi
 
-    cd "$dir" || exit
+    cd "$dir/src" || exit
 
     log fetch "$url"
 
@@ -372,14 +371,19 @@ install() {
     rm -f "$dir"/p.lock
 
     log configure "$version"
-    ./configure &> /dev/null
+    ./configure --prefix="$dir" &> /dev/null
 
     log compile "$version"
     make &> /dev/null
 
-    if [ ! -f "python" ]; then
+    if [ $? -ne 0 ] ; then
         abort "Unable to compile Python $version!"
     fi
+
+    make install &> /dev/null
+
+    cd "$dir" || exit
+    rm -rf "$dir"/src
 
     success "Installed Python $version!"
 }
