@@ -183,7 +183,7 @@ check_current_version() {
     if test $? -eq 0; then
         get_current_version
         if diff &> /dev/null \
-            "$BASE_VERSIONS_DIR"/python/"$current"/python \
+            "$BASE_VERSIONS_DIR"/python/"$current"/bin/python \
             "$(which python)" ; then
             active="python/$current"
         fi
@@ -295,7 +295,7 @@ activate() {
     local version=$1
     check_current_version
     if test "$version" != "$active"; then
-        ln -sf "$BASE_VERSIONS_DIR"/"$version"/python "$BASE_VERSIONS_DIR"/python/python
+        ln -sfn "$BASE_VERSIONS_DIR"/"$version"/bin "$BASE_VERSIONS_DIR"/bin
     fi
 }
 
@@ -305,10 +305,9 @@ activate() {
 activate_default() {
     log activate default
 
-    rm -rf "$BASE_VERSIONS_DIR"/python/python
+    rm -rf "$BASE_VERSIONS_DIR"/bin
 
-    get_current_version
-    success "Now using Python $current!"
+    success "Now using default system Python!"
 }
 
 #
@@ -385,6 +384,14 @@ install() {
     cd "$dir" || exit
     rm -rf "$dir"/src
 
+    if test -f "$dir"/bin/python3; then
+        ln -sf "$dir"/bin/python3 "$dir"/bin/python
+    fi
+
+    if test -f "$dir"/bin/pip3; then
+        ln -sf "$dir"/bin/pip3 "$dir"/bin/pip
+    fi
+
     success "Installed Python $version!"
 }
 
@@ -428,7 +435,7 @@ display_bin_path_for_version() {
         fi
     fi
 
-    local bin=$BASE_VERSIONS_DIR/python/$version/python
+    local bin=$BASE_VERSIONS_DIR/python/$version/bin/python
     if test -f "$bin"; then
         printf "%s \n" "$bin"
     else
@@ -450,7 +457,7 @@ execute_with_version() {
         version=$(display_latest_stable_version)
     fi
 
-    local bin=$BASE_VERSIONS_DIR/python/$version/python
+    local bin=$BASE_VERSIONS_DIR/python/$version/bin/python
 
     shift # remove version
 
