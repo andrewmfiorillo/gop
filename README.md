@@ -8,39 +8,9 @@ There are no tricky settings, options, or crazy dependencies. `p` is just a help
 
 `p` is also great for getting started using Python development versions. Use `p latest` to get up and running with the latest development version of Python!
 
-## How does `p` work?
-
-`p` stores each Python version installed under the directory `$P_PREFIX/p/versions/python`. When a Python version is activated, `p` creates symbolic links in `$P_PREFIX/p/versions`, pointing to the:
-
- - `bin`
- - `include`
- - `lib`
- - `share`
-
-directories of the activated Python version.
-
-For example, Python version 3.6.5 is installed, and it will be placed under the directory:
-
-```
-$P_PREFIX/p/versions/python/3.6.5
-```
-
-Activating version 3.6.5 will create symlinks that points to directories under the activated Python installation:
-
-```
-$P_PREFIX/p/versions/bin -> $P_PREFIX/p/versions/python/3.6.5/bin
-$P_PREFIX/p/versions/include -> $P_PREFIX/p/versions/python/3.6.5/include
-$P_PREFIX/p/versions/lib -> $P_PREFIX/p/versions/python/3.6.5/lib
-$P_PREFIX/p/versions/share -> $P_PREFIX/p/versions/python/3.6.5/share
-```
-
-`$P_PREFIX` allows you to customize where python versions are installed, and defaults to `/usr/local` if unspecified. To use the Python that `p` installs, it is necessary to prepend `$P_PREFIX/p/versions/bin` to your `$PATH`.
-
-When installing Python 3, the symlink `python` and `pip` are also created for `python3` and `pip3` executables respectively, for the sake of convenience.
-
 ## Installation
 
-Download and place the script in your `$PATH`.
+Download and place the script in your `$PATH`:
 
 ```shell
 curl -sSLo p https://raw.githubusercontent.com/Raphx/p/master/bin/p
@@ -191,6 +161,36 @@ $ p default
 
   Success: Now using default system Python!
 ```
+
+## How does `p` work?
+
+`p` stores each Python version installed under the directory `$P_PREFIX/p/versions/python`. When a Python version is activated, `p` creates symbolic links in `$P_PREFIX/p/versions`, pointing to the:
+
+ - `bin`
+ - `include`
+ - `lib`
+ - `share`
+
+directories of the activated Python version.
+
+For example, Python version 3.6.5 is installed, and it will be placed under the directory:
+
+```
+$P_PREFIX/p/versions/python/3.6.5
+```
+
+Activating version 3.6.5 will create symlinks that points to directories under the activated Python installation:
+
+```
+$P_PREFIX/p/versions/bin -> $P_PREFIX/p/versions/python/3.6.5/bin
+$P_PREFIX/p/versions/include -> $P_PREFIX/p/versions/python/3.6.5/include
+$P_PREFIX/p/versions/lib -> $P_PREFIX/p/versions/python/3.6.5/lib
+$P_PREFIX/p/versions/share -> $P_PREFIX/p/versions/python/3.6.5/share
+```
+
+`$P_PREFIX` allows you to customize where python versions are installed, and defaults to `/usr/local` if unspecified. To use the Python that `p` installs, it is necessary to prepend `$P_PREFIX/p/versions/bin` to your `$PATH`.
+
+When installing Python 3, the symlink `python` and `pip` are also created for `python3` and `pip3` executables respectively, for the sake of convenience.
 
 ## FAQs
 
