@@ -392,6 +392,9 @@ install() {
         ln -sf "$dir"/bin/pip3 "$dir"/bin/pip
     fi
 
+    log activate "$version"
+    activate python/"$version"
+
     success "Installed Python $version!"
 }
 
