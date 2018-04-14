@@ -526,6 +526,7 @@ display_remote_versions() {
     | egrep -v '^0\.[0-7]\.' \
     | egrep -v '^0\.8\.[0-5]$' \
     | sort -u -k 1,1n -k 2,2n -k 3,3n -t . \
+    | head -n -1 \
     | awk '{ print "  " $1 }')
 
     echo
