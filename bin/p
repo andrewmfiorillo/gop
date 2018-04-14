@@ -416,7 +416,7 @@ remove_versions() {
         log remove "$version"
     done
 
-    versions=("$@")
+    versions="$*"
 
     success "Removed Python ${versions// /, }!"
 }
