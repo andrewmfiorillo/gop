@@ -11,7 +11,7 @@ P_PREFIX=${P_PREFIX-/usr/local}
 BASE_VERSIONS_DIR=$P_PREFIX/p/versions
 SYMLINK_DIR="bin include lib share"
 
-test -d "$BASE_VERSIONS_DIR"/python || mkdir -p "$BASE_VERSIONS_DIR"/python
+[ -d "$BASE_VERSIONS_DIR"/python ] || mkdir -p "$BASE_VERSIONS_DIR"/python
 
 # Python source
 
@@ -25,7 +25,7 @@ command -v wget > /dev/null && GET="wget --no-check-certificate -q -O-"
 
 command -v curl > /dev/null && GET="curl -# -L"
 
-test -z "$GET" && abort "curl or wget required"
+[ -z "$GET" ] && abort "curl or wget required"
 
 #
 # Utility functions.
@@ -61,7 +61,7 @@ get_current_version() {
 
 check_current_version() {
   command -v python &> /dev/null
-  if test $? -eq 0; then
+  if [ $? -eq 0 ]; then
     get_current_version
     if diff &> /dev/null \
       "$BASE_VERSIONS_DIR"/python/"$current"/bin/python \
@@ -86,7 +86,7 @@ versions_paths() {
 activate() {
   local version=$1
   check_current_version
-  if test "$version" != "$active"; then
+  if [ "$version" != "$active" ]; then
     for symdir in $SYMLINK_DIR; do
       ln -sfn "$BASE_VERSIONS_DIR"/"$version"/$symdir "$BASE_VERSIONS_DIR"/$symdir
     done
@@ -178,7 +178,7 @@ display_versions_with_selected() {
   echo
   for version in $(versions_paths); do
     version_minus_python=${version#*python\/}
-    if test "$version" = "$selected"; then
+    if [ "$version" = "$selected" ]; then
       printf "  \033[36mο\033[0m %s\033[0m\n" "$version_minus_python"
     else
       printf "    \033[90m%s\033[0m\n" "$version_minus_python"
@@ -238,10 +238,10 @@ display_remote_versions() {
   echo
 
   for v in $versions; do
-    if test "$active" = "python/$v"; then
+    if [ "$active" = "python/$v" ]; then
       printf "  \033[36mο\033[0m %s \033[0m\n" "$v"
     else
-      if test -d "$BASE_VERSIONS_DIR"/python/"$v"; then
+      if [ -d "$BASE_VERSIONS_DIR"/python/"$v" ]; then
         printf "    %s \033[0m\n" "$v"
       else
         printf "    \033[90m%s\033[0m\n" "$v"
@@ -307,7 +307,7 @@ install() {
 
   local dots
   dots=$(echo "$version" | sed 's/[^.]*//g')
-  if test ${#dots} -eq 1; then
+  if [ ${#dots} -eq 1 ]; then
     version=$($GET 2> /dev/null "${MIRROR[@]}" \
       | egrep -o '[0-9]+\.[0-9]+\.[0-9]+' \
       | egrep -v '^0\.[0-7]\.' \
@@ -316,15 +316,15 @@ install() {
       | egrep ^"$version" \
       | tail -n1)
 
-    test "$version" || abort "invalid version ${1#v}"
+    [ "$version" ] || abort "invalid version ${1#v}"
   fi
 
   local dir=$BASE_VERSIONS_DIR/python/$version
   local url
   url=$(tarball_url "$version")
 
-  if test -d "$dir"; then
-    if [[ ! -e "$dir"/p.lock ]] ; then
+  if [ -d "$dir" ]; then
+    if [ ! -e "$dir"/p.lock ] ; then
       activate python/"$version"
 
       log activate "$version"
@@ -372,11 +372,11 @@ install() {
   cd "$dir" || exit
   rm -rf "$dir"/src
 
-  if test -f "$dir"/bin/python3; then
+  if [ -f "$dir"/bin/python3 ]; then
     ln -sf "$dir"/bin/python3 "$dir"/bin/python
   fi
 
-  if test -f "$dir"/bin/pip3; then
+  if [ -f "$dir"/bin/pip3 ]; then
     ln -sf "$dir"/bin/pip3 "$dir"/bin/pip
   fi
 
@@ -390,7 +390,7 @@ install() {
 
 is_latest_version() {
   get_current_version
-  if [[ $current == $(display_latest_version) ]]; then
+  if [ $current == $(display_latest_version) ]; then
     echo "yes"
   else
     echo "no"
@@ -401,7 +401,7 @@ is_latest_version() {
 
 is_latest_stable_version() {
   get_current_version
-  if [[ $current == $(display_latest_stable_version) ]]; then
+  if [ $current == $(display_latest_stable_version) ]; then
     echo "yes"
   else
     echo "no"
@@ -426,12 +426,12 @@ display_status() {
 #
 
 execute_with_version() {
-  test -z "$1" && abort "version required"
+  [ -z "$1" ] && abort "version required"
   local version=${1#v}
 
-  if [[ "$version" = "latest" ]]; then
+  if [ "$version" = "latest" ]; then
     version=$(display_latest_version)
-  elif [[ "$version" = "stable" ]]; then
+  elif [ "$version" = "stable" ]; then
     version=$(display_latest_stable_version)
   fi
 
@@ -439,7 +439,7 @@ execute_with_version() {
 
   shift # remove version
 
-  if test -f "$bin"; then
+  if [ -f "$bin" ]; then
     $bin "$@"
   else
     abort "Python $version is not installed"
@@ -464,7 +464,7 @@ display_bin_path_for_version() {
   fi
 
   local bin=$BASE_VERSIONS_DIR/python/$version/bin/python
-  if test -f "$bin"; then
+  if [ -f "$bin" ]; then
     printf "%s \n" "$bin"
   else
     abort "Python $version is not installed"
@@ -476,12 +476,12 @@ display_bin_path_for_version() {
 #
 
 remove_versions() {
-  test -z "$1" && abort "version(s) required"
+  [ -z "$1" ] && abort "version(s) required"
 
   for version in "$@"; do
-    if [[ "$version" = "latest" ]]; then
+    if [ "$version" = "latest" ]; then
       version=$(display_latest_version)
-    elif [[ "$version" = "stable" ]]; then
+    elif [ "$version" = "stable" ]; then
       version=$(display_latest_stable_version)
     fi
 
@@ -516,11 +516,11 @@ activate_default() {
 # Handle arguments.
 #
 
-if test $# -eq 0; then
-  test -z "$(versions_paths)" && abort "no installed version"
+if [ $# -eq 0 ]; then
+  [ -z "$(versions_paths)" ] && abort "no installed version"
   display_versions
 else
-  while test $# -ne 0; do
+  while [ $# -ne 0 ]; do
     case $1 in
       -V|--version) display_p_version; exit ;;
       -h|--help|help) display_help; exit ;;
