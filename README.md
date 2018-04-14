@@ -182,10 +182,10 @@ $P_PREFIX/p/versions/python/3.6.5
 Activating version 3.6.5 will create symlinks that points to directories under the activated Python installation:
 
 ```
-$P_PREFIX/p/versions/bin -> $P_PREFIX/p/versions/python/3.6.5/bin
+$P_PREFIX/p/versions/bin     -> $P_PREFIX/p/versions/python/3.6.5/bin
 $P_PREFIX/p/versions/include -> $P_PREFIX/p/versions/python/3.6.5/include
-$P_PREFIX/p/versions/lib -> $P_PREFIX/p/versions/python/3.6.5/lib
-$P_PREFIX/p/versions/share -> $P_PREFIX/p/versions/python/3.6.5/share
+$P_PREFIX/p/versions/lib     -> $P_PREFIX/p/versions/python/3.6.5/lib
+$P_PREFIX/p/versions/share   -> $P_PREFIX/p/versions/python/3.6.5/share
 ```
 
 `$P_PREFIX` allows you to customize where python versions are installed, and defaults to `/usr/local` if unspecified. To use the Python that `p` installs, it is necessary to prepend `$P_PREFIX/p/versions/bin` to your `$PATH`.
