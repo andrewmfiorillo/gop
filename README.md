@@ -10,7 +10,14 @@ There are no tricky settings, options, or crazy dependencies. `p` is just a help
 
 ## How does `p` work?
 
-`p` stores each Python version installed under the directory `$P_PREFIX/p/versions/python`. When a Python version is activated, `p` creates a symbolic link `$P_PREFIX/p/versions/bin` pointing to the bin directory of the activated Python version.
+`p` stores each Python version installed under the directory `$P_PREFIX/p/versions/python`. When a Python version is activated, `p` creates symbolic links in `$P_PREFIX/p/versions`, pointing to the:
+
+ - `bin`
+ - `include`
+ - `lib`
+ - `share`
+
+directories of the activated Python version.
 
 For example, Python version 3.6.5 is installed, and it will be placed under the directory:
 
@@ -18,10 +25,13 @@ For example, Python version 3.6.5 is installed, and it will be placed under the 
 $P_PREFIX/p/versions/python/3.6.5
 ```
 
-Activating version 3.6.5 will create a symlink that points to the bin directory:
+Activating version 3.6.5 will create symlinks that points to directories under the activated Python installation:
 
 ```
 $P_PREFIX/p/versions/bin -> $P_PREFIX/p/versions/python/3.6.5/bin
+$P_PREFIX/p/versions/include -> $P_PREFIX/p/versions/python/3.6.5/include
+$P_PREFIX/p/versions/lib -> $P_PREFIX/p/versions/python/3.6.5/lib
+$P_PREFIX/p/versions/share -> $P_PREFIX/p/versions/python/3.6.5/share
 ```
 
 `$P_PREFIX` allows you to customize where python versions are installed, and defaults to `/usr/local` if unspecified. To use the Python that `p` installs, it is necessary to prepend `$P_PREFIX/p/versions/bin` to your `$PATH`.
@@ -38,7 +48,7 @@ chmod +x p
 mv p /usr/local/bin
 ```
 
-You might want to install Python versions to your home directory, and add the directory containing the Python bin directory symlink to your `$PATH`:
+You might want to install Python versions to your home directory, and add the bin directory symlink to your `$PATH`:
 
 ```shell
 # In ~/.bash_profile, or the equivalent

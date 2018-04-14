@@ -9,6 +9,7 @@ UP=$'\033[A'
 DOWN=$'\033[B'
 P_PREFIX=${P_PREFIX-/usr/local}
 BASE_VERSIONS_DIR=$P_PREFIX/p/versions
+SYMLINK_DIR="bin include lib share"
 
 #
 # Python source.
@@ -295,7 +296,9 @@ activate() {
     local version=$1
     check_current_version
     if test "$version" != "$active"; then
-        ln -sfn "$BASE_VERSIONS_DIR"/"$version"/bin "$BASE_VERSIONS_DIR"/bin
+        for symdir in $SYMLINK_DIR; do
+            ln -sfn "$BASE_VERSIONS_DIR"/"$version"/$symdir "$BASE_VERSIONS_DIR"/$symdir
+        done
     fi
 }
 
@@ -305,7 +308,9 @@ activate() {
 activate_default() {
     log activate default
 
-    rm -rf "$BASE_VERSIONS_DIR"/bin
+    for symdir in $SYMLINK_DIR; do
+        rm "$BASE_VERSIONS_DIR"/$symdir 2> /dev/null
+    done
 
     success "Now using default system Python!"
 }
