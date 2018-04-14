@@ -485,8 +485,12 @@ remove_versions() {
       version=$(display_latest_stable_version)
     fi
 
-    rm -rf "$BASE_VERSIONS_DIR"/python/"${version#v}"
-    log remove "$version"
+    if [ -d "$BASE_VERSIONS_DIR"/python/"${version#v}" ]; then
+      rm -rf "$BASE_VERSIONS_DIR"/python/"${version#v}"
+      log remove "$version"
+    else
+      abort "Python $version is not installed"
+    fi
   done
 
   versions="$*"
