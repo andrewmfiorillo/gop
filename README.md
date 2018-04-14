@@ -1,6 +1,6 @@
-# `p` - Python Version Management, Simplified.
+# `p` - Python version management, simplified.
 
-![introduction](https://cloud.githubusercontent.com/assets/1139621/7488032/37f37308-f389-11e4-8995-89f7cba5ad8b.gif)
+![introduction](assets/screen.png)
 
 `p` is powerful and feature-packed, yet simple, both in setup and use.
 
@@ -10,7 +10,7 @@ There are no tricky settings, options, or crazy dependencies. `p` is just a help
 
 ## How does `p` work?
 
-`p` stores each Python version installed under the directory `$P_PREFIX/p/versions/python`. When a Python version is activated, `p` creates a symbolic link `$P_PREFIX/p/versions/python/python` pointing to the relevant Python binary.
+`p` stores each Python version installed under the directory `$P_PREFIX/p/versions/python`. When a Python version is activated, `p` creates a symbolic link `$P_PREFIX/p/versions/bin` pointing to the bin directory of the activated Python version.
 
 For example, Python version 3.6.5 is installed, and it will be placed under the directory:
 
@@ -18,34 +18,36 @@ For example, Python version 3.6.5 is installed, and it will be placed under the 
 $P_PREFIX/p/versions/python/3.6.5
 ```
 
-Activating version 3.6.5 will create a symlink that points to the binary:
+Activating version 3.6.5 will create a symlink that points to the bin directory:
 
 ```
-$P_PREFIX/p/versions/python/python -> $P_PREFIX/p/versions/python/3.6.5/python
+$P_PREFIX/p/versions/bin -> $P_PREFIX/p/versions/python/3.6.5/bin
 ```
 
-`$P_PREFIX` allows you to customize where python versions are installed, and defaults to `/usr/local` if unspecified. To use the Python symlink created, it is necessary to prepend `$P_PREFIX/p/versions/python` to your `$PATH`.
+`$P_PREFIX` allows you to customize where python versions are installed, and defaults to `/usr/local` if unspecified. To use the Python that `p` installs, it is necessary to prepend `$P_PREFIX/p/versions/bin` to your `$PATH`.
 
-## :inbox_tray: Installation
+When installing Python 3, the symlink `python` and `pip` are also created for `python3` and `pip3` executables respectively, for the sake of convenience.
 
-After downloading the Bash script, simply copy it over to your `$PATH` and `p` will take care of the rest.
+## Installation
 
-```
+Download and place the script in your `$PATH`.
+
+```shell
 curl -sSLo p https://raw.githubusercontent.com/Raphx/p/master/bin/p
 chmod +x p
 mv p /usr/local/bin
 ```
 
-You might want to install Python versions to your home directory, and add the directory containing the Python symlink to your `$PATH`:
+You might want to install Python versions to your home directory, and add the directory containing the Python bin directory symlink to your `$PATH`:
 
-```
+```shell
 # In ~/.bash_profile, or the equivalent
 
 export P_PREFIX=~/.python
-export PATH="$P_PREFIX/p/versions/python:$PATH"
+export PATH="$P_PREFIX/p/versions/bin:$PATH"
 ```
 
-## :green_book: Usage
+## Usage
 
 ```
 Usage: p [COMMAND] [args]
@@ -79,8 +81,8 @@ Executing `p` without any arguments displays a list of installed Python versions
 $ p
 
     2.7.14
+    3.3.4
   ο 3.6.5
-    3.7.0
 ```
 
 ### `p ls [latest|stable]`
@@ -120,7 +122,6 @@ Activate, or install the specified Python version if not already installed. `lat
 $ p 3.3.4
 
      install : Python-3.3.4
-      create : /home/raphx/.python/p/versions/python/3.3.4
        fetch : https://www.python.org/ftp/python/3.3.4/Python-3.3.4.tgz
    configure : 3.3.4
      compile : 3.3.4
@@ -135,7 +136,7 @@ Show the version, bin path, and status of current activated Python version.
 ```
 $ p status
      version : 3.6.5
-         bin : /home/raphx/.python/p/versions/python/3.6.5/python
+         bin : /home/raphx/.python/p/versions/python/3.6.5/bin/python
       latest : no
       stable : yes
 ```
@@ -156,12 +157,12 @@ Output the bin path for the current activated Python version.
 
 ```
 $ p bin
-/home/raphx/.python/p/versions/python/3.6.5/python
+/home/raphx/.python/p/versions/python/3.6.5/bin/python
 ```
 
 ### `p rm`
 
-Remove an installed Python version.
+Remove an installed Python version. Multiple versions can also be provided using space as delimiter. The `rm` subcommand also accepts `stable` and `latest` identifier.
 
 ```
 $ p rm 2.7.14
@@ -178,19 +179,28 @@ Remove the Python symlink created by `p`, thereby reverting to use the default o
 $ p default
     activate : default
 
-  Success: Now using Python 3.6.5!
+  Success: Now using default system Python!
 ```
 
 ## FAQs
 
+**What about `pip`?**
+
+`pip` is installed by default for Python 3. For Python 2.7.9 or above, you can run the following command to install `pip`:
+
+```
+python -m ensurepip
+```
+
+For Python version less than 2.7.9, you will have to install `pip` manually.
+
+**Can I use `p` to manage Python project dependencies?**
+
+You could, though it is recommended to use [`pipenv`](https://docs.pipenv.org/) to do so. `p` can be used to install the Python version for your project, and `pipenv` can later be used to setup the project virtual environment using the Python version installed.
+
 **How do I get this working on Windows?**
 
 No Windows support planned at the moment, PRs are always welcomed!
-
-## TODO
-
-* also manage pip
-* also manage PyPy
 
 ## Attribution
 
