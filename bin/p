@@ -54,6 +54,11 @@ success() {
 get_current_version() {
   local version
   version=$(python -V 2>&1)
+
+  if [ $? -ne 0 ]; then
+    abort "Python is not found. Try installing or activating one."
+  fi
+
   current=${version#*Python }
 }
 
