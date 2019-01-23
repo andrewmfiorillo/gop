@@ -3,11 +3,13 @@ package pgo
 import (
 	"fmt"
 
+	"github.com/juju/loggo"
 	"github.com/urfave/cli"
 )
 
 // MakeApp constructs a configured CLI application
 func MakeApp() *cli.App {
+	logger.SetLogLevel(loggo.DEBUG)
 	app := cli.NewApp()
 	app.Name = "p"
 	app.Usage = "get Going with Python version management"
@@ -20,6 +22,12 @@ func MakeApp() *cli.App {
 			Usage:   "Output the versions of Python available",
 			Action:  ListAvailable,
 			Subcommands: []cli.Command{
+				{
+					Name:     "installed",
+					HelpName: "ls installed",
+					Usage:    "Output the installed versions of Python",
+					Action:   ListInstalled,
+				},
 				{
 					Name:     "latest",
 					HelpName: "ls latest",
@@ -109,21 +117,63 @@ func getVersionString(c *cli.Context) (string, error) {
 
 // ListAvailable .
 func ListAvailable(c *cli.Context) error {
+	versions, err := GetAvailableVersions()
+	if err != nil {
+		return err
+	}
+	currentVersion, err := GetCurrentVersion()
+	if err != nil {
+		return err
+	}
+
+	for _, vStr := range versions {
+		if vStr == currentVersion {
+			fmt.Printf("--> %s \n", vStr)
+		} else {
+			fmt.Printf("    %s \n", vStr)
+		}
+	}
 	return nil
 }
 
 // ListInstalled .
 func ListInstalled(c *cli.Context) error {
+	versions, err := GetInstalledVersions()
+	if err != nil {
+		return err
+	}
+	currentVersion, err := GetCurrentVersion()
+	if err != nil {
+		return err
+	}
+
+	for _, vStr := range versions {
+		if vStr == currentVersion {
+			fmt.Printf("--> %s \n", vStr)
+		} else {
+			fmt.Printf("    %s \n", vStr)
+		}
+	}
 	return nil
 }
 
 // ShowLatest .
 func ShowLatest(c *cli.Context) error {
+	latest, err := GetLatestVersion()
+	if err != nil {
+		return err
+	}
+	fmt.Println(latest)
 	return nil
 }
 
 // ShowStable .
 func ShowStable(c *cli.Context) error {
+	stable, err := GetStableVersion()
+	if err != nil {
+		return err
+	}
+	fmt.Println(stable)
 	return nil
 }
 
@@ -137,12 +187,12 @@ func ShowStatus(c *cli.Context) error {
 	return nil
 }
 
-// ActivateLatest .
+// ActivateLatest . TODO
 func ActivateLatest(c *cli.Context) error {
 	return nil
 }
 
-// ActivateStable .
+// ActivateStable . TODO
 func ActivateStable(c *cli.Context) error {
 	return nil
 }
@@ -158,32 +208,85 @@ func ActivateVersion(c *cli.Context) error {
 	}
 	logger.Debugf("specified version: %s", vstr)
 
-	// activate it
+	// is is installed?
+	installedVersions, err := GetInstalledVersions()
+	if err != nil {
+		return err
+	}
+	if !stringContains(installedVersions, vstr) {
+		logger.Debugf("version %s not installed, installing...", vstr)
+		if err = InstallPythonVersion(vstr, false); err != nil {
+			return err
+		}
+	}
 
-	return nil
+	// activate it
+	return ActivatePythonVersion(vstr)
 }
 
 // InstallVersion .
 func InstallVersion(c *cli.Context) error {
+	// get version string
+	vstr, err := getVersionString(c)
+	if err != nil {
+		return err
+	}
+	logger.Debugf("specified version: %s", vstr)
+
+	// TODO, flag for --force
+	if err = InstallPythonVersion(vstr, false); err != nil {
+		return err
+	}
+	fmt.Println("Success!")
 	return nil
 }
 
 // UseVersion .
 func UseVersion(c *cli.Context) error {
-	return nil
+	// get version string
+	vstr, err := getVersionString(c)
+	if err != nil {
+		return err
+	}
+	logger.Debugf("specified version: %s", vstr)
+	return CallWithVersion(vstr, c.Args().Tail())
 }
 
 // ShowVersion .
 func ShowVersion(c *cli.Context) error {
+	// get version string
+	vstr, err := getVersionString(c)
+	if err != nil {
+		return err
+	}
+	logger.Debugf("specified version: %s", vstr)
+
+	files, err := VersionFiles(vstr)
+	if err != nil {
+		return err
+	}
+	fmt.Println(files.Executable)
 	return nil
 }
 
 // RemoveVersion .
 func RemoveVersion(c *cli.Context) error {
-	return nil
+	// get version string
+	vstr, err := getVersionString(c)
+	if err != nil {
+		return err
+	}
+	logger.Debugf("specified version: %s", vstr)
+	return UninstallPythonVersion(vstr)
 }
 
 // ActivateDefault .
 func ActivateDefault(c *cli.Context) error {
+	// get version string
+	vstr, err := getVersionString(c)
+	if err != nil {
+		return err
+	}
+	logger.Debugf("specified version: %s", vstr)
 	return nil
 }
