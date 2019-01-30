@@ -9,12 +9,26 @@ import (
 
 // MakeApp constructs a configured CLI application
 func MakeApp() *cli.App {
-	logger.SetLogLevel(loggo.DEBUG)
+	logger.SetLogLevel(defaultLoggerLevel)
 	app := cli.NewApp()
 	app.Name = "p"
 	app.Usage = "get Going with Python version management"
 	app.Version = "0.0.1"
+	app.Before = func(c *cli.Context) error {
+		cfg := getConfig()
+		if err := checkConfiguration(cfg); err != nil {
+			return err
+		}
+
+		if c.Bool("verbose") {
+			logger.SetLogLevel(loggo.INFO)
+		}
+		return nil
+	}
 	app.Action = ActivateVersion
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{Name: "verbose"},
+	}
 	app.Commands = []cli.Command{
 		{
 			Name:    "ls",
@@ -60,8 +74,11 @@ func MakeApp() *cli.App {
 		{
 			Name:      "install",
 			Usage:     "Install Python <version> but do NOT activate",
-			ArgsUsage: "<version>",
-			Action:    InstallVersion,
+			ArgsUsage: "<version> --force",
+			Flags: []cli.Flag{
+				cli.BoolFlag{Name: "force"},
+			},
+			Action: InstallVersion,
 		},
 		{
 			Name:      "use",
@@ -187,13 +204,51 @@ func ShowStatus(c *cli.Context) error {
 	return nil
 }
 
-// ActivateLatest . TODO
+// ActivateLatest installs (if necessary) and activates the latest available version of python
 func ActivateLatest(c *cli.Context) error {
+	latest, err := GetLatestVersion()
+	if err != nil {
+		return err
+	}
+
+	isInstalled, err := isVersionInstalled(latest)
+	if err != nil {
+		return err
+	}
+	if !isInstalled {
+		if err := InstallPythonVersion(latest, false); err != nil {
+			return err
+		}
+	}
+
+	if err = ActivatePythonVersion(latest); err != nil {
+		return err
+	}
+	fmt.Println(latest)
 	return nil
 }
 
-// ActivateStable . TODO
+// ActivateStable installs (if necessary) and activates the latest stable version of python
 func ActivateStable(c *cli.Context) error {
+	stable, err := GetStableVersion()
+	if err != nil {
+		return err
+	}
+
+	isInstalled, err := isVersionInstalled(stable)
+	if err != nil {
+		return err
+	}
+	if !isInstalled {
+		if err := InstallPythonVersion(stable, false); err != nil {
+			return err
+		}
+	}
+
+	if err = ActivatePythonVersion(stable); err != nil {
+		return err
+	}
+	fmt.Println(stable)
 	return nil
 }
 
@@ -214,17 +269,21 @@ func ActivateVersion(c *cli.Context) error {
 		return err
 	}
 	if !stringContains(installedVersions, vstr) {
-		logger.Debugf("version %s not installed, installing...", vstr)
+		logger.Infof("version %s not installed, installing...", vstr)
 		if err = InstallPythonVersion(vstr, false); err != nil {
 			return err
 		}
 	}
 
 	// activate it
-	return ActivatePythonVersion(vstr)
+	if err := ActivatePythonVersion(vstr); err != nil {
+		return err
+	}
+	fmt.Println("activated", vstr)
+	return nil
 }
 
-// InstallVersion .
+// InstallVersion installs the specified version of python but does not activate
 func InstallVersion(c *cli.Context) error {
 	// get version string
 	vstr, err := getVersionString(c)
@@ -233,15 +292,15 @@ func InstallVersion(c *cli.Context) error {
 	}
 	logger.Debugf("specified version: %s", vstr)
 
-	// TODO, flag for --force
-	if err = InstallPythonVersion(vstr, false); err != nil {
+	force := c.Bool("force")
+	if err = InstallPythonVersion(vstr, force); err != nil {
 		return err
 	}
-	fmt.Println("Success!")
+	fmt.Println(vstr)
 	return nil
 }
 
-// UseVersion .
+// UseVersion executes a command with the given arguments
 func UseVersion(c *cli.Context) error {
 	// get version string
 	vstr, err := getVersionString(c)
@@ -252,7 +311,7 @@ func UseVersion(c *cli.Context) error {
 	return CallWithVersion(vstr, c.Args().Tail())
 }
 
-// ShowVersion .
+// ShowVersion displays the path to the specified version of python
 func ShowVersion(c *cli.Context) error {
 	// get version string
 	vstr, err := getVersionString(c)
@@ -269,7 +328,7 @@ func ShowVersion(c *cli.Context) error {
 	return nil
 }
 
-// RemoveVersion .
+// RemoveVersion uninstalls the specified version
 func RemoveVersion(c *cli.Context) error {
 	// get version string
 	vstr, err := getVersionString(c)
@@ -277,16 +336,23 @@ func RemoveVersion(c *cli.Context) error {
 		return err
 	}
 	logger.Debugf("specified version: %s", vstr)
-	return UninstallPythonVersion(vstr)
-}
-
-// ActivateDefault .
-func ActivateDefault(c *cli.Context) error {
-	// get version string
-	vstr, err := getVersionString(c)
-	if err != nil {
+	if err := UninstallPythonVersion(vstr); err != nil {
 		return err
 	}
-	logger.Debugf("specified version: %s", vstr)
+	fmt.Println("uninstalled %s", vstr)
+	return nil
+}
+
+// ActivateDefault reverts the to default sytem python
+func ActivateDefault(c *cli.Context) error {
+	if err := Deactivate(); err != nil {
+		return err
+	}
+	vstr, err := GetCurrentVersion()
+	if err != nil {
+		logger.Errorf("no system python installed!")
+		return err
+	}
+	fmt.Println("system python: %s", vstr)
 	return nil
 }

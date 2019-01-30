@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/andrewmfiorillo/p/pgo"
+	pgo "github.com/andrewmfiorillo/p"
 )
 
 func main() {
