@@ -11,8 +11,8 @@ import (
 func MakeApp() *cli.App {
 	logger.SetLogLevel(defaultLoggerLevel)
 	app := cli.NewApp()
-	app.Name = "p"
-	app.Usage = "get Going with Python version management"
+	app.Name = "gop"
+	app.Usage = "simple governing of your Python versions"
 	app.Version = "0.0.1"
 	app.Before = func(c *cli.Context) error {
 		cfg := getConfig()
@@ -110,8 +110,8 @@ Name:
 {{.Name}}{{if .Usage}} - {{.Usage}}{{end}}
 
 Commands:
-    p <version>{{ "\t" }}Activate to Python <version>{{range .Commands}}
-    p {{join .Names ", "}} {{ .ArgsUsage }}{{ "\t"}}{{.Usage}}{{ if .Subcommands }}{{range .Subcommands}}{{ "\n        " }}p {{ .HelpName }} {{ .ArgsUsage }}{{ "\t"}}{{.Usage}}{{end}}{{end}}{{end}}
+    gop <version>{{ "\t" }}Activate to Python <version>{{range .Commands}}
+    gop {{join .Names ", "}} {{ .ArgsUsage }}{{ "\t"}}{{.Usage}}{{ if .Subcommands }}{{range .Subcommands}}{{ "\n        " }}gop {{ .HelpName }} {{ .ArgsUsage }}{{ "\t"}}{{.Usage}}{{end}}{{end}}{{end}}
 
 Options:
 	{{range $index, $option := .VisibleFlags}}{{if $index}}

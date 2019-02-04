@@ -4,11 +4,11 @@ import (
 	"log"
 	"os"
 
-	pgo "github.com/andrewmfiorillo/p"
+	gop "github.com/andrewmfiorillo/p"
 )
 
 func main() {
-	app := pgo.MakeApp()
+	app := gop.MakeApp()
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
