@@ -1,61 +1,66 @@
-# `p` - Python version management, simplified.
+# `gop` - simple governing of your Python versions
 
-![introduction](assets/screen.png)
+`gop` is simple to setup, simple to use, and powerful to boot.
 
-`p` is powerful and feature-packed, yet simple, both in setup and use.
+There are no tricky settings, options, or crazy dependencies. `gop` is just a helpful tool that gets the job done, and is the Golang cousin of [`p`, a bash script for managing Python versions](https://github.com/Raphx/p).
 
-There are no tricky settings, options, or crazy dependencies. `p` is just a helpful ~600 line Bash script that gets the job done, and was heavily inspired by [`n`, a version manager for Node.js](https://github.com/tj/n).
-
-`p` is also great for getting started using Python development versions. Use `p latest` to get up and running with the latest development version of Python!
+`gop` is also great for getting started using Python development versions. Use `gop latest` to get up and running with the latest development version of Python!
 
 ## Installation
 
-Download and place the script in your `$PATH`:
+To build from source, install [Go](https://golang.org/) and then run
 
 ```shell
-curl -sSLo p https://raw.githubusercontent.com/Raphx/p/master/bin/p
-chmod +x p
-mv p /usr/local/bin
+go get -u github.com/andrewmfiorillo/gop/cmd/gop
 ```
 
-You might want to install Python versions to your home directory, and add the bin directory symlink to your `$PATH`:
+
+The two settings you may want to change are `P_PREFIX` (where are installed versions are kept) and your `PATH` (which makes them easily accessible)
+
+In Linux or OSX, this would look like
 
 ```shell
 # In ~/.bash_profile, or the equivalent
-
-export P_PREFIX=~/.python
+export P_PREFIX=$HOME
 export PATH="$P_PREFIX/p/versions/bin:$PATH"
+```
+
+Or in Windows, you set the environment variables with [Rapid Environment Editor](https://www.rapidee.com/en/about) or your favorite tool
+
+```batch
+set P_PREFIX=%USERPROFILE%
+set PATH=%P_PREFIX%;%PATH%
 ```
 
 ## Usage
 
 ```
-Usage: p [COMMAND] [args]
-
 Commands:
-
-p                              Output versions installed
-p ls                           Output the versions of Python available
-  p ls latest                  Output the latest Python version available
-  p ls stable                  Output the latest stable Python version available
-p <version>                    Activate to Python <version>
-  p latest                     Activate to the latest Python release
-  p stable                     Activate to the latest stable Python release
-p status                       Output current status
-p use <version> [args ...]     Execute Python <version> with [args ...]
-p bin <version>                Output bin path for <version>
-p rm <version ...>             Remove the given version(s)
-p default                      Use default (system) Python installation
+    gop <version>                  Activate to Python <version>
+    gop ls, list                   Output the versions of Python available
+        gop ls installed           Output the installed versions of Python
+        gop ls latest              Output the latest Python version available
+        gop ls stable              Output the latest stable Python version available
+    gop latest                     Activate to the latest Python release
+    gop stable                     Activate to the latest stable Python release
+    gop status                     Output current status
+    gop install <version> --force  Install Python <version> but do NOT activate
+    gop use <version> [args ...]   Execute Python <version> with [args ...]
+    gop bin <version>              Output bin path for <version>
+    gop rm <version ...>           Remove the given version(s)
+    gop default, disable           Use default (system) Python installation
+    gop help, h [command]          Shows a list of commands or help for one command
 
 Options:
+  --verbose
+  --help, -h     show help
+  --version, -v  print the version
 
--V, --version   Output current version of p
--h, --help      Display help information
 ```
 
-### `p`
+<!-- ### `gop`
 
-Executing `p` without any arguments displays a list of installed Python versions, and the current activated version.
+Executing `gop` without any arguments displays a list of installed Python versions, and the current activated version.
 
 ```
 $ p
@@ -160,7 +165,7 @@ $ p default
     activate : default
 
   Success: Now using default system Python!
-```
+``` -->
 
 ## How does `p` work?
 
@@ -188,7 +193,7 @@ $P_PREFIX/p/versions/lib     -> $P_PREFIX/p/versions/python/3.6.5/lib
 $P_PREFIX/p/versions/share   -> $P_PREFIX/p/versions/python/3.6.5/share
 ```
 
-`$P_PREFIX` allows you to customize where python versions are installed, and defaults to `/usr/local` if unspecified. To use the Python that `p` installs, it is necessary to prepend `$P_PREFIX/p/versions/bin` to your `$PATH`.
+`$P_PREFIX` allows you to customize where python versions are installed, and defaults to `$HOME` (`%USERPROFILE%` on Windows) if unspecified. To use the Python that `gop` installs, you must either call its full path (given with `gop bin`) or add `$P_PREFIX/p/versions/bin` to your `$PATH`.
 
 When installing Python 3, the symlink `python` and `pip` are also created for `python3` and `pip3` executables respectively, for the sake of convenience.
 
@@ -204,17 +209,13 @@ python -m ensurepip
 
 For Python version less than 2.7.9, you will have to install `pip` manually.
 
-**Can I use `p` to manage Python project dependencies?**
+**Can I use `gop` to manage Python project dependencies?**
 
-You could, though it is recommended to use [`pipenv`](https://docs.pipenv.org/) to do so. `p` can be used to install the Python version for your project, and `pipenv` can later be used to setup the project virtual environment using the Python version installed.
-
-**How do I get this working on Windows?**
-
-No Windows support planned at the moment, PRs are always welcomed!
+You could, though it is recommended to use [`pipenv`](https://docs.pipenv.org/) to do so. `gop` can be used to install the Python version for your project, and `pipenv` can later be used to setup the project virtual environment using the Python version installed.
 
 ## Attribution
 
-This is a fork from the original [p](https://github.com/qw3rtman/p) by [Nimit Klara](https://github.com/qw3rtman).
+This is a fork from [p](https://github.com/Raphx/p) by [Raphx](https://github.com/Raphx).
 
 ## License
 
