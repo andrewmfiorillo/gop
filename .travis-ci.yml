@@ -1,0 +1,24 @@
+
+language: go
+
+stages:
+  - test
+  - name: release
+    if: branch = master
+
+matrix:
+  include:
+    - name: "Linux Tests"
+      env: P_PREFIX=/usr/home
+      os: linux
+    - name: "OSX Tests"
+      env: P_PREFIX=/usr/home
+      os: osx
+    - name: "Windows Tests"
+      env: P_PREFIX=C:\p
+      os: windows
+
+script:
+  - go version && go env
+  - go build ./cmd/gop
+  - gop --version && gop --help
