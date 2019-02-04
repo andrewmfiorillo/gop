@@ -1,6 +1,10 @@
 
 language: go
 
+branches:
+  only:
+  - master
+
 stages:
   - test
   - name: release
@@ -17,8 +21,18 @@ matrix:
     - name: "Windows Tests"
       env: P_PREFIX=C:\p
       os: windows
+    - if: branch = master
+      name: "Build for all Platforms"
+      stage: release
+      os: linux
+      script:
+        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then make release; fi'
+
+      
+before_script:
+  # get dependencies
+  - go get ./...
 
 script:
-  - go version && go env
   - go build ./cmd/gop
   - gop --version && gop --help

@@ -1,5 +1,8 @@
 # `gop` - simple governing of your Python versions
 
+[![Build Status](https://travis-ci.org/andrewmfiorillo/gop.svg?branch=master)](https://travis-ci.org/andrewmfiorillo/gop)
+
+
 `gop` is simple to setup, simple to use, and powerful to boot.
 
 There are no tricky settings, options, or crazy dependencies. `gop` is just a helpful tool that gets the job done, and is the Golang cousin of [`p`, a bash script for managing Python versions](https://github.com/Raphx/p).
