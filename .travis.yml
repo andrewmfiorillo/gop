@@ -1,6 +1,10 @@
 
 language: go
 
+branches:
+  only:
+  - master
+
 stages:
   - test
   - name: release
@@ -22,7 +26,7 @@ matrix:
       stage: release
       os: linux
       script:
-        - make release
+        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then make release; fi'
 
       
 before_script:
