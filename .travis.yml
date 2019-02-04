@@ -11,14 +11,16 @@ matrix:
     - name: "Linux Tests"
       env: P_PREFIX=/usr/home
       os: linux
-    - name: "OSX Tests"
-      env: P_PREFIX=/usr/home
-      os: osx
-    - name: "Windows Tests"
-      env: P_PREFIX=C:\p
-      os: windows
+    # - name: "OSX Tests"
+    #   env: P_PREFIX=/usr/home
+    #   os: osx
+    # - name: "Windows Tests"
+    #   env: P_PREFIX=C:\p
+    #   os: windows
+      
+before_script:
+  - go get ./...
 
 script:
-  - go version && go env
   - go build ./cmd/gop
   - gop --version && gop --help
