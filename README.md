@@ -167,9 +167,9 @@ $ p default
   Success: Now using default system Python!
 ``` -->
 
-## How does `p` work?
+## How does `gop` work?
 
-`p` stores each Python version installed under the directory `$P_PREFIX/p/versions/python`. When a Python version is activated, `p` creates symbolic links in `$P_PREFIX/p/versions`, pointing to the:
+`gop` stores each Python version installed under the directory `$P_PREFIX/p/versions/python`. When a Python version is activated, `p` creates symbolic links in `$P_PREFIX/p/versions`, pointing to the:
 
  - `bin`
  - `include`
