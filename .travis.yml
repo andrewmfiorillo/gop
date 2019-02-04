@@ -11,14 +11,22 @@ matrix:
     - name: "Linux Tests"
       env: P_PREFIX=/usr/home
       os: linux
-    # - name: "OSX Tests"
-    #   env: P_PREFIX=/usr/home
-    #   os: osx
-    # - name: "Windows Tests"
-    #   env: P_PREFIX=C:\p
-    #   os: windows
+    - name: "OSX Tests"
+      env: P_PREFIX=/usr/home
+      os: osx
+    - name: "Windows Tests"
+      env: P_PREFIX=C:\p
+      os: windows
+    - if: branch = master
+      name: "Build for all Platforms"
+      stage: release
+      os: linux
+      script:
+        - make release
+
       
 before_script:
+  # get dependencies
   - go get ./...
 
 script:
